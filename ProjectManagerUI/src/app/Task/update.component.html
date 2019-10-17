@@ -1,0 +1,221 @@
+<div class="panel panel-primary">
+    <div class="panel panel-heading">
+      <h4>Add Task</h4>
+    </div>
+    <div class="panel panel-body">
+      <form #taskForm="ngForm" (ngSubmit)="updateTask()">        
+        <div class="form-group row" [class.has-error]="(projectId.value==null && projectId.touched)">
+          <label for="projectId" class="col-xs-3 col-form-label control-lable">Project: </label>
+          <div class="col-sm-3">
+            <input id="projectId" readonly type="text" class="form-control" name="project" [(ngModel)]="task.Project_Id" #projectId="ngModel"
+              required>
+          </div>
+          <div class="col-sm-3">
+            <button type="button" disabled class="btn btn-primary" data-toggle="modal" data-target="#projectModal">
+              Project
+            </button>
+          </div>
+          <span class="help-block" *ngIf="projectId.value ==null  && projectId.touched">
+            Project Id is required
+          </span>
+        </div> 
+    
+        <div class="form-group row" [class.has-error]="taskName.invalid && taskName.touched">
+          <label for="taskName" class="col-xs-3 col-form-label control-lable">Task Name: </label>
+          <div class="col-sm-6">
+            <input id="taskName" type="text" class="form-control" name="fName" [(ngModel)]="task.Task_Name" #taskName="ngModel" required>
+          </div>
+          <span class="help-block" *ngIf="taskName.invalid && taskName.touched">
+            Task Name is required
+          </span>
+        </div>
+  
+        <div class="form-group row">
+          <label for="parentCheckbox" class="col-xs-3 col-form-label control-label">
+            <input type="checkbox" disabled required name="parentCheckbox" [(ngModel)]="task.IsParent" #parentCheckbox="ngModel">Parent Task</label>
+        </div>
+  
+        <div class="form-group row" [class.has-error]="(startDate.invalid && startDate.touched )">
+          <label for="startDate" class="col-xs-3 col-form-label control-lable">Start Date: </label>
+          <div class="col-sm-3">
+            <input id="startDate" type="date" class="form-control" [disabled]="task.IsParent !=null && task.IsParent==true" name="sDate" [ngModel]="task.Start_Date | date:'yyyy-MM-dd'"
+              (ngModelChange)="task.Start_Date = $event" #startDate="ngModel" required>
+          </div>
+          <label for="endDate" class="col-xs-1 col-form-label control-lable">End Date: </label>
+          <div class="col-sm-2">
+            <input id="endDate" type="date" class="form-control" [disabled]="task.IsParent !=null && task.IsParent==true" name="eDate" [ngModel]="task.End_Date | date:'yyyy-MM-dd'"
+              (ngModelChange)="task.End_Date = $event" #endDate="ngModel" required>
+          </div>
+          <span class="help-block" *ngIf="startDate.invalid && startDate.touched">
+            Start Date is required
+          </span>
+          <span class="help-block" *ngIf="endDate.invalid  && endDate.touched">
+            End Date is required
+          </span>
+          <span class="help-block" *ngIf="endDate.value < startDate.value">
+            End Date must be greater than start date.
+          </span>
+  
+        </div>
+       <div class="form-group row" [class.has-error]="parentId.value==null && parentId.touched">
+          <label for="parentId" class="col-xs-3 col-form-label control-lable">Parent: </label>
+          <div class="col-sm-3">
+            <input id="parentId" readonly type="text" class="form-control" name="parent" [(ngModel)]="task.Parent_Id" #parentId="ngModel"
+              required>
+          </div>
+          <div class="col-sm-3">
+            <button type="button" [disabled]="task.IsParent !=null && task.IsParent==true" class="btn btn-primary" data-toggle="modal" data-target="#parentModal">
+              Parent
+            </button>
+          </div>
+          <span class="help-block" *ngIf="parentId.value ==null && task.IsParent==false && parentId.touched">
+            Parent Id is required
+          </span>
+        </div>
+        <div class="modal fade" id="parentModal" tabindex="-1" role="dialog" aria-labelledby="parentModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="parentModalLabel">Select Parent</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="form-row">
+                  <div class="form-group col-md-4">
+                    <input type="text" class="form-control" id="inputTask4" [(ngModel)]="searchParent" name="searchParent" placeholder="Search By First Name..">
+                  </div>
+                </div>
+                <table class="table" id="myTable">
+                  <thead>
+                    <tr>
+                      <th scope="col">Parent Id</th>
+                      <th scope="col">Parent Task Name</th>
+  
+                      <th scope="col"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of parentData">
+                      <td scope="row">{{item.Parent_Id}}</td>
+                      <td>{{item.Parent_Task1}}</td>
+                      <td>
+                        <button type="button" class="use-address" (click)="GetParentId(item.Parent_Id)">Select</button>
+                      </td>
+                    </tr>
+                    <tr *ngIf="!parentData">
+                      <td colspan="5">
+                        Loading data. Please wait...
+                      </td>
+                    </tr>
+                    <tr *ngIf="parentData && parentData.length==0">
+                      <td colspan="5">
+                        No employee records to display
+                      </td>
+                    </tr>
+  
+                  </tbody>
+                </table>
+  
+              </div>
+  
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="priority" class="col-xs-3 col-form-label control-lable">Priority: </label>
+          <div class="col-sm-6">
+            <input id="priority" type="range" [disabled]="task.IsParent !=null && task.IsParent==true" class="custom-range" value="0" min="0" max="30" name="taskPrioriy" [(ngModel)]="task.Priority"
+              #priority="ngModel" required>
+          </div>
+  
+          <span class="help-block" *ngIf="priority.value === 0 && priority.touched">
+            Please select Priority
+          </span>
+        </div>
+  
+        <div class="form-group row" [class.has-error]="managerId.value==null && managerId.touched">
+          <label for="managerId" class="col-xs-3 col-form-label control-lable">Manager: </label>
+          <div class="col-sm-3">
+            <input id="managerId" readonly type="text" class="form-control" name="manager" [(ngModel)]="task.User_Id" #managerId="ngModel"
+              required>
+          </div>
+          <div class="col-sm-3">
+            <button type="button" [disabled]="task.IsParent !=null && task.IsParent==true" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+              User
+            </button>
+          </div>
+          <span class="help-block" *ngIf="managerId.value ==null && managerId.touched">
+            User Id is required
+          </span>
+        </div>
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Select Manager</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="form-row">
+                  <div class="form-group col-md-4">
+                    <input type="text" class="form-control" id="inputTask4" [(ngModel)]="searchUser" name="searchUser" placeholder="Search By First Name..">
+                  </div>
+                </div>
+                <table class="table" id="myTable">
+                  <thead>
+                    <tr>
+                      <th scope="col">Manager Id</th>
+                      <th scope="col">First Name</th>
+                      <th scope="col">Last Name</th>
+                      <th scope="col"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of userData">
+                      <td scope="row">{{item.Employee_id}}</td>
+                      <td>{{item.First_Name}}</td>
+                      <td>{{item.Last_Name}}</td>
+                      <td>
+                        <button type="button" class="use-address" (click)="GetUserId(item.Employee_id)">Select</button>
+                      </td>
+                    </tr>
+                    <tr *ngIf="!userData">
+                      <td colspan="5">
+                        Loading data. Please wait...
+                      </td>
+                    </tr>
+                    <tr *ngIf="userData && userData.length==0">
+                      <td colspan="5">
+                        No employee records to display
+                      </td>
+                    </tr>
+  
+                  </tbody>
+                </table>
+  
+              </div>
+  
+            </div>
+          </div>
+        </div> 
+  
+        <div class="input-group">
+          <div class="row">
+            <div class="col-sm-6">
+              <button type="submit" class="btn btn-primary">Update</button>
+            </div>
+            <div class="col-sm-6">
+              <button type="reset" class="btn btn-primary">Cancel</button>
+            </div>
+          </div>
+        </div>
+  
+      </form>
+  
+  
+    </div>
+  </div>

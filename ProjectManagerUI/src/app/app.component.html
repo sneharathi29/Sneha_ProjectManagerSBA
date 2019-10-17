@@ -1,0 +1,16 @@
+<div style="text-align:center">
+  <h1>
+  Project Management
+  </h1>
+  </div>
+  <nav [ngClass] = "'menu'">
+  <a routerLink="/editproject/0" routerLinkActive="active-link">Add Project</a> |
+  <a routerLink="/edit/0" routerLinkActive="active-link">Add User</a> |
+  <a routerLink="/task" routerLinkActive="active-link">Add Task</a>|
+  <a routerLink="/view" routerLinkActive="active-link">View Task</a>
+  
+  </nav>
+  <br/><br/>
+  <div>
+  <router-outlet></router-outlet>
+  </div>

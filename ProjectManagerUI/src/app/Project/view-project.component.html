@@ -1,0 +1,60 @@
+<form>
+    <div class="form-row">
+    <div class="form-group col-md-4">  
+    <input type="text" class="form-control" id="inputTask4" [(ngModel)]="searchUser" name="searchUser" placeholder="Search By First Name..">
+    </div>
+    <div class="form-group col-md-2">
+    <label for="inputParentTask4">Sort :</label>
+    </div>
+    <div class="form-group col-md-2">
+      <button class="btn btn-primary" (click)="sortByFName('Project_Name')">Project Name</button>
+      </div>
+      <div class="form-group col-md-2">
+        <button class="btn btn-primary" (click)="sortByFName('Start_Date')">Start Date</button>
+        </div>
+        <div class="form-group col-md-2">
+          <button class="btn btn-primary" (click)="sortByFName('End_Date')">End Date</button>
+          </div>
+    </div> 
+    </form>
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col">Project</th>
+        <th scope="col">No Of Task</th>
+        <th scope="col">Completed</th>      
+        <th scope="col">Start Date</th>
+        <th scope="col">End Date</th>
+        <th scope="col">Priority</th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of projectData | projectfilter: searchUser">
+        <td scope="row">{{item.Project_Name}}</td>
+        <td>{{item.No_Of_Task}}</td>
+        <td>{{item.Completed_Task}}</td>
+        <td>{{item.Start_Date | date}}</td>
+        <td>{{item.End_Date | date}}</td>
+        <td>{{item.Priority}}</td>
+
+        <td><button class="btn btn-primary"  (click)="editProject(item.Project_Id)">Edit</button> </td>
+        <td><button class="btn btn-primary"  (click)="SuspendProject(item.Project_Id)">Delete</button> </td>
+      </tr>     
+      <tr *ngIf="!projectData">
+          <td colspan="8">
+              Loading data. Please wait...
+          </td>
+      </tr>
+      <!--This message is displayed if the web services does not return any data-->
+      <tr *ngIf="projectData && projectData.length==0">
+          <td colspan="5">
+              No employee records to display
+          </td>
+      </tr>
+   
+    </tbody>
+  </table>
+  

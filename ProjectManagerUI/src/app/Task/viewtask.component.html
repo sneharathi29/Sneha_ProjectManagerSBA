@@ -1,0 +1,121 @@
+<form>
+    <div class="form-row">
+        <div class="form-group col-sm-2">  
+        <input type="text" readonly class="form-control" id="inputTask4" [(ngModel)]="searchTerm" name="searchTerm" placeholder="Search By Project..">
+        </div>
+        <div class="col-sm-1">
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#projectModal">
+            Project
+          </button>
+        </div>
+    </div>
+        <div class="modal fade" id="projectModal" tabindex="-1" role="dialog" aria-labelledby="projectModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="projectModalLabel">Select Project</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">               
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th scope="col">Project</th>
+                      <th scope="col">Start Date</th>
+                      <th scope="col">End Date</th>
+                      <th scope="col">Priority</th>
+                      <th scope="col"></th>
+  
+  
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of projectData">
+                      <td scope="row">{{item.Project_Name}}</td>
+                      <td>{{item.Start_Date | date}}</td>
+                      <td>{{item.End_Date | date}}</td>
+                      <td>{{item.Priority}}</td>
+                      <td>
+                        <button type="button" class="use-address" (click)="GetProjectId(item.Project_Name)">Select</button>
+                      </td>
+                    </tr>
+                    <tr *ngIf="!projectData">
+                      <td colspan="5">
+                        Loading data. Please wait...
+                      </td>
+                    </tr>
+                    <!--This message is displayed if the web services does not return any data-->
+                    <tr *ngIf="projectData && projectData.length==0">
+                      <td colspan="5">
+                        No Project records to display
+                      </td>
+                    </tr>
+  
+                  </tbody>
+                </table>
+  
+              </div>
+  
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+        <div class="form-group col-sm-1">
+        <label for="inputParentTask4">Sort :</label>
+        </div>
+        <div class="form-group col-sm-2">
+          <button class="btn btn-primary" (click)="sortByFName('Task_Name')">Task Name</button>
+          </div>
+          <div class="form-group col-sm-2">
+            <button class="btn btn-primary" (click)="sortByFName('Start_Date')">Start Date</button>
+            </div>
+            <div class="form-group col-sm-2">
+              <button class="btn btn-primary" (click)="sortByFName('End_Date')">End Date</button>
+              </div>
+              <div class="form-group col-sm-2">
+                <button class="btn btn-primary" (click)="sortByFName('Priority')">Priority</button>
+                </div>
+        </div> 
+  
+    </form>
+<table class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col">Task</th>
+        <th scope="col">Parent</th>
+        <th scope="col">Priority</th>
+        <th scope="col">Start Task</th>
+        <th scope="col">End Task</th>        
+
+        <th scope="col"></th>
+        <th scope="col"></th>
+
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of filteredEmployees">
+        <td scope="row">{{item.Task_Name}}</td>
+        <td>{{item.Parent_Name}}</td>
+        <td>{{item.Priority}}</td>
+        <td>{{item.Start_Date | date }}</td>
+        <td>{{item.End_Date | date }}</td>      
+
+        <td><button class="btn btn-primary"  [disabled]="!item.Staus" [routerLink]="['/update',item.Task_Id]">Edit</button> </td>
+        <td><button class="btn btn-primary" [disabled]="!item.Staus" (click)="EndTask(item.Task_Id)">End Task</button> </td>
+      </tr>     
+      <tr *ngIf="!task">
+          <td colspan="7">
+              Loading data. Please wait...
+          </td>
+      </tr>
+      <!--This message is displayed if the web services does not return any data-->
+      <tr *ngIf="task && task.length==0">
+          <td colspan="7">
+              No employee records to display
+          </td>
+      </tr>
+   
+    </tbody>
+  </table>

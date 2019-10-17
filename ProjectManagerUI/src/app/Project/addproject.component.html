@@ -1,0 +1,156 @@
+<div class="panel panel-primary">
+  <div class="panel panel-heading">
+    <h4>Add Project</h4>
+  </div>
+  <div class="panel panel-body">
+    <form #projectForm="ngForm" (ngSubmit)="saveProject()">
+      <div class="row" *ngIf="showMsg">
+        <div class="col-xs-12">
+          <p class="alert alert-success">
+            <strong>Project Added Successfully</strong>
+          </p>
+        </div>
+      </div>
+      <div class="row" *ngIf="updateMsg">
+        <div class="col-xs-12">
+          <p class="alert alert-success">
+            <strong>Project Updated Successfully</strong>
+          </p>
+        </div>
+      </div>
+
+      <div class="form-group row" [class.has-error]="projectName.invalid && projectName.touched">
+        <label for="projectName" class="col-xs-3 col-form-label control-lable">Project Name: </label>
+        <div class="col-sm-6">
+          <input id="projectName" type="text" class="form-control" name="fName" [(ngModel)]="project.Project_Name" #projectName="ngModel"
+            required>
+        </div>
+        <span class="help-block" *ngIf="projectName.invalid && projectName.touched">
+          Project Name is required
+        </span>
+      </div>
+      <div class="form-group row" [class.has-error]="(dateCheckbox.invalid && dateCheckbox.touched)">
+        <label for="dateCheckbox" class="col-xs-3 col-form-label control-label">
+          <input type="checkbox" required name="dateCheckbox" [(ngModel)]="project.SetDateCheckBox" (change)="setDate()" #dateCheckbox="ngModel"> Set Start Date & End Date</label>
+        <div class="col-sm-3">
+          <input id="startDate" type="date" class="form-control" [disabled]="project.SetDateCheckBox==null" name="sDate"
+           [ngModel]="project.Start_Date | date:'yyyy-MM-dd'" (ngModelChange)="project.Start_Date = $event"
+            #startDate="ngModel" required>
+        </div>
+        <div class="col-sm-3">
+          <input id="endDate" type="date" class="form-control" [disabled]="project.SetDateCheckBox==null" name="eDate" [ngModel]="project.End_Date | date:'yyyy-MM-dd'" (ngModelChange)="project.End_Date = $event"
+            #endDate="ngModel" required>
+        </div>
+        <span class="help-block" *ngIf="dateCheckbox.touched && dateCheckbox.error?.required">
+            Date is required
+          </span>
+        <span class="help-block" *ngIf="startDate.invalid">
+          Start Date is required
+        </span>
+        <span class="help-block" *ngIf="endDate.invalid">
+          End Date is required
+        </span>
+        <span class="help-block" *ngIf="endDate.value < startDate.value">
+            End Date must be greater than start date.
+          </span> 
+      </div>
+
+      <div class="form-group row" [class.has-error]="priority.touched">
+          <label for="priority" class="col-xs-3 col-form-label control-lable">Priority: </label>
+          <div class="col-sm-6">
+            <input id="priority" type="range" class="custom-range" min="0" max="30" name="projectPrioriy" [(ngModel)]="project.Priority" #priority="ngModel"
+              required>
+          </div>
+         
+          <span class="help-block" *ngIf="priority.value === 0 && priority.touched">
+            Please select Priority
+          </span>
+        </div>
+
+        <div class="form-group row" [class.has-error]="managerId.value==null && managerButton.touched">
+            <label for="managerId" class="col-xs-3 col-form-label control-lable">Manager: </label>
+            <div class="col-sm-3">
+              <input id="managerId" readonly type="text" class="form-control" name="manager" [(ngModel)]="project.Manager_Id" #managerId="ngModel"
+                required>
+            </div>
+            <div class="col-sm-3">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" #managerButton >
+                    Manager
+                  </button>       
+              </div>
+            <span class="help-block" *ngIf="managerId.value ==null && managerButton.touched">
+              Manager Id is required
+            </span>
+          </div>
+          <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Select Manager</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                      <div class="form-row">
+                          <div class="form-group col-md-4">  
+                          <input type="text" class="form-control" id="inputTask4" [(ngModel)]="searchUser" name="searchUser" placeholder="Search By First Name..">
+                          </div>
+                      </div>
+                      <table class="table" id="myTable">
+                          <thead>
+                            <tr>
+                              <th scope="col">Manager Id</th>
+                              <th scope="col">First Name</th>
+                              <th scope="col">Last Name</th>                                    
+                              <th scope="col"></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let item of userData | userFilter: searchUser">
+                              <td scope="row">{{item.Employee_id}}</td>
+                              <td>{{item.First_Name}}</td>
+                              <td>{{item.Last_Name}}</td>  
+                              <td><button type="button" class="use-address" (click)="GetId(item.Employee_id)">Select</button></td>                     
+                            </tr>     
+                            <tr *ngIf="!userData">
+                                <td colspan="5">
+                                    Loading data. Please wait...
+                                </td>
+                            </tr>
+                            <!--This message is displayed if the web services does not return any data-->
+                            <tr *ngIf="userData && userData.length==0">
+                                <td colspan="5">
+                                    No employee records to display
+                                </td>
+                            </tr>
+                         
+                          </tbody>
+                        </table>
+                        
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+
+      <div class="input-group">
+        <div class="row">
+          <div class="col-sm-6" *ngIf="project.Project_Id===null">
+            <button type="submit" class="btn btn-primary" [disabled]="projectForm.invalid">Save</button>
+          </div>
+          <div class="col-sm-6" *ngIf="project.Project_Id !=null">
+            <button type="submit" class="btn btn-primary" [disabled]="projectForm.invalid">Update</button>
+          </div>
+          <div class="col-sm-6">
+            <button type="reset" class="btn btn-primary">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+    </form>
+    <br/>
+    <br/>
+    <app-view-project [projectData]="projectData"> </app-view-project>
+  </div>
+</div>

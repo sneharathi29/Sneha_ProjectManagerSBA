@@ -1,0 +1,69 @@
+
+<div class="panel panel-primary">
+  <div class="panel panel-heading">
+    <h4>Add User</h4>
+    </div>
+  <div class="panel panel-body">
+  <form #employeeForm="ngForm" (ngSubmit)="saveEmployee()">
+      <div class="row"  *ngIf="showMsg">
+          <div class="col-xs-12">
+            <p class="alert alert-success">
+                <strong>User Added Successfully</strong>  
+            </p>
+          </div>
+        </div>
+        <div class="row"  *ngIf="updateMsg">
+            <div class="col-xs-12">
+              <p class="alert alert-success">
+                  <strong>User Updated Successfully</strong>  
+              </p>
+            </div>
+          </div>
+          <div class="form-group row" [class.has-error]="firstName.invalid && firstName.touched">
+  <label for="firstName" class="col-sm-2 col-form-label">First Name:</label>
+  <div class="col-sm-5">
+      <input id="firstName" type="text" class="form-control"
+       name="fName" [(ngModel)]="user.First_Name" #firstName="ngModel" required></div>
+       <span class="help-block" *ngIf="firstName.invalid && firstName.touched">
+   First Name is required
+  </span>
+  </div>
+  <div class="form-group row" [class.has-error]="lastName.invalid && lastName.touched">
+    <label for="lastName" class="col-sm-2 col-form-label">Last Name:</label>
+    <div class="col-sm-5">
+        <input id="lastName"  type="text" class="form-control"
+         name="lName" [(ngModel)]="user.Last_Name" #lastName="ngModel" required></div>
+         <span class="help-block" *ngIf="lastName.invalid && lastName.touched">
+          Last Name is required
+         </span>
+    </div>
+    <div class="form-group row" [class.has-error]="employeeIdControl.invalid && employeeIdControl.touched">
+      <label for="empid" class="col-sm-2 col-form-label">Employee Id:</label>
+      <div class="col-sm-5">
+          <input id="empid"  type="number" class="form-control"
+           name="empid" [(ngModel)]="user.Employee_id" #employeeIdControl="ngModel" required></div>
+           <span class="help-block" *ngIf="employeeIdControl.invalid && employeeIdControl.touched">
+            Employee Id is required
+           </span>
+      </div>
+  
+  <div class="input-group">
+    <div class="row">
+  <div class="col-sm-6" *ngIf="user.User_Id===null">
+  <button type="submit" class="btn btn-primary" [disabled]="employeeForm.invalid">Save</button>
+  </div>
+  <div class="col-sm-6" *ngIf="user.User_Id !=null">
+      <button type="submit" class="btn btn-primary" [disabled]="employeeForm.invalid">Update</button>
+      </div>
+  <div class="col-sm-6">
+  <button type="reset" class="btn btn-primary">Cancel</button>
+  </div>
+  </div>
+  </div>
+  
+  </form>
+<br/><br/>
+  <app-view-user [userData]="userData"></app-view-user>
+  </div>
+  </div>
+  
