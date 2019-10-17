@@ -1,0 +1,17 @@
+Started by user admin
+Building in workspace C:\Program Files (x86)\Jenkins\workspace\ProjectManagerUI
+No credentials specified
+ > git.exe rev-parse --is-inside-work-tree # timeout=10
+Fetching changes from the remote Git repository
+ > git.exe config remote.origin.url https://github.com/sneharathi29/Sneha_ProjectManagerSBA.git # timeout=10
+Fetching upstream changes from https://github.com/sneharathi29/Sneha_ProjectManagerSBA.git
+ > git.exe --version # timeout=10
+ > git.exe fetch --tags --progress https://github.com/sneharathi29/Sneha_ProjectManagerSBA.git +refs/heads/*:refs/remotes/origin/*
+ > git.exe rev-parse "refs/remotes/origin/master^{commit}" # timeout=10
+ > git.exe rev-parse "refs/remotes/origin/origin/master^{commit}" # timeout=10
+Checking out Revision 5b675dd7b437e32489f392dedfc849e036e478f0 (refs/remotes/origin/master)
+ > git.exe config core.sparsecheckout # timeout=10
+ > git.exe checkout -f 5b675dd7b437e32489f392dedfc849e036e478f0
+Commit message: "new check-in in the repository"
+ > git.exe rev-list --no-walk 5b675dd7b437e32489f392dedfc849e036e478f0 # timeout=10
+Finished: SUCCESS
